@@ -8,7 +8,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details. http://www.gnu.org/licenses/
 sistema=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
-sklog=/var/log/skphp.log
+sklog=/var/log/ntphp.log
 if [ ! -e /etc/yum.repos.d/remi.repo ]; then
 echo "I not found remi repo, stop install... "
 exit 2
@@ -23,7 +23,7 @@ elif [ "$vp" -eq 8 ];then
 	actual=$(php -v| head -n1 | grep --only-matching --perl-regexp "8\.\\d+")
 else
 echo "Cant get actual php versión"
-echo "Run php -v and ask on forum or yo@skamasle.com"
+echo "Run php -v and ask on forum or admin@netstech.net"
 echo "Leaving instalation..."
 exit 4
 fi
@@ -52,6 +52,34 @@ ln -s  /etc/opt/remi/php80/php.d /etc/php80.d
 chmod +x /usr/local/vesta/data/templates/web/httpd/sk-php80.sh
 tput setaf 1
 echo "PHP 8.0 Ready!"
+tput sgr0 
+fi
+}
+
+function phpinstall81 () {
+ver=8.1
+if [ $actual = $ver ];then
+echo "Skip PHP 8.1 actually installed"
+else
+tput setaf 2
+echo "Installing PHP 8.1"
+yum install -y php81-php-imap php81-php-process php81-php-pspell php81-php-xml php81-php-xmlrpc php81-php-pdo php81-php-ldap php81-php-pecl-zip php81-php-common php81-php php81-php-mcrypt php81-php-gmp php81-php-mysqlnd php81-php-mbstring php81-php-gd php81-php-tidy php81-php-pecl-memcache --enablerepo=remi  >> $sklog
+echo "......."
+
+# Temporary source on my personal Github repo.
+curl -s https://raw.githubusercontent.com/netstech/nt-php-selector/master/sk-php81-centos.sh > /usr/local/vesta/data/templates/web/httpd/nt-php81.sh
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/sk-php81.stpl
+
+ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/sk-php81.tpl  
+
+ln -s /etc/opt/remi/php81/php.ini /etc/php81.ini
+
+ln -s  /etc/opt/remi/php81/php.d /etc/php81.d
+
+chmod +x /usr/local/vesta/data/templates/web/httpd/sk-php81.sh
+tput setaf 1
+echo "PHP 8.1 Ready!"
 tput sgr0 
 fi
 }
@@ -237,9 +265,10 @@ tput sgr0
 	phpinstall71
 	phpinstall72
 	phpinstall8
+	phpinstall1
 echo "################################"
 echo "Aditional PHP versión installed!"
-echo "More info on skamasle.com or vestacp forums."
+echo "More info on netstech.net or vestacp forums."
 fi
 else
 	echo "Only support centos"
