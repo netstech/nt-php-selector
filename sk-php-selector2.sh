@@ -26,7 +26,7 @@ fi
 
 fixit () {
 # Temporary the resource from my personal Github repo.
-curl -s https://raw.githubusercontent.com/samaphp/sk-php-selector/master/sk-php${1}-centos.sh > /usr/local/vesta/data/templates/web/httpd/sk-php${1}.sh
+curl -s https://raw.githubusercontent.com/netstech/nt-php-selector/master/sk-php${1}-centos.sh > /usr/local/vesta/data/templates/web/httpd/sk-php${1}.sh
 ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.stpl /usr/local/vesta/data/templates/web/httpd/sk-php${1}.stpl
 ln -s /usr/local/vesta/data/templates/web/httpd/phpfcgid.tpl /usr/local/vesta/data/templates/web/httpd/sk-php${1}.tpl 
 if [ -e /etc/opt/remi/php${1}/php.ini ]; then
@@ -38,6 +38,19 @@ chmod +x /usr/local/vesta/data/templates/web/httpd/sk-php${1}.sh
 tput setaf 1
 echo "PHP ${1} Ready!"
 tput sgr0
+}
+function phpinstall81 () {
+ver=8.1
+if [ $actual = $ver ];then
+echo "Skip PHP 8.1 actually installed"
+else
+tput setaf 2
+echo "Installing PHP 8.1"
+yum install -y php81-php-imap php81-php-process php81-php-pspell php81-php-xml php81-php-xmlrpc php81-php-pdo php81-php-ldap php81-php-pecl-zip php81-php-common php81-php php81-php-mcrypt php81-php-gmp php81-php-mysqlnd php81-php-mbstring php81-php-gd php81-php-tidy php81-php-pecl-memcache --enablerepo=remi  >> $sklog
+echo "......."
+
+fixit 81
+fi
 }
 function phpinstall80 () {
 ver=8.0
@@ -171,6 +184,7 @@ tput sgr0
     phpinstall73
     phpinstall74
     phpinstall80
+    phpinstall81
 }
 usage () {
 tput setaf 1
@@ -185,7 +199,7 @@ tput sgr0
 echo "bash $0 all"
 tput setaf 1
     echo "###############################################"
-	echo "Supported Versions: 54, 55, 56, 70, 71, 72, 73, 80"
+	echo "Supported Versions: 54, 55, 56, 70, 71, 72, 73, 80, 81"
     echo "###############################################"
 tput sgr0
 }
@@ -214,15 +228,16 @@ tput sgr0
 			php70) phpinstall70 ;;
 			php71) phpinstall71 ;;
 			php72) phpinstall72 ;;
-            php73) phpinstall73 ;;
-            php74) phpinstall74 ;;
-            php80) phpinstall80 ;;
+		        php73) phpinstall73 ;;
+		        php74) phpinstall74 ;;
+		        php80) phpinstall80 ;;
+		        php81) phpinstall81 ;;
 			all) all ;;
 	  esac
 done
 echo "################################"
-echo "Aditional PHP versión installed!"
-echo "More info on skamasle.com or forum.vestacp.com or follwme in twiter @skamasle"
+echo "Aditional PHP version installed!"
+echo "More info on netstech.net"
 echo "################################"
 		fi
 else
